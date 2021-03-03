@@ -918,7 +918,7 @@ public:
             uint32_t address_id,
             uint32_t port_id) const
     {
-        return global_segment_.can_write_to_port(port_id);
+        return global_segment_.can_write_to_port(address_id, port_id);
     }
 
     std::shared_ptr<Port> open_port(
@@ -929,7 +929,7 @@ public:
             SharedMemGlobal::Port::OpenMode open_mode = SharedMemGlobal::Port::OpenMode::ReadShared)
     {
         return std::make_shared<Port>(this,
-                       global_segment_.open_port(port_id, max_descriptors, healthy_check_timeout_ms, open_mode),
+                       global_segment_.open_port(address_id, port_id, max_descriptors, healthy_check_timeout_ms, open_mode),
                        open_mode);
     }
 
@@ -937,9 +937,10 @@ public:
      * Remove a port from the system.
      */
     void remove_port(
+            uint32_t address_id,
             uint32_t port_id)
     {
-        global_segment_.remove_port(port_id);
+        global_segment_.remove_port(address_id, port_id);
     }
 
     /**

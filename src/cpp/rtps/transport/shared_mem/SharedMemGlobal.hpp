@@ -821,14 +821,15 @@ public:
      * @return whether the port can be written or not.
      */
     bool can_write_to_port(
+            uint32_t address_id,
             uint32_t port_id) const
     {
         try
         {
-            auto port_segment_name = get_port_segment_name(port_id);
+            auto port_segment_name = get_port_segment_name(address_id, port_id);
 
             std::unique_ptr<SharedMemSegment::named_mutex> port_mutex =
-                SharedMemSegment::open_or_create_and_lock_named_mutex(port_segment_name + "_mutex");
+                    SharedMemSegment::open_or_create_and_lock_named_mutex(port_segment_name + "_mutex");
 
             std::unique_lock<SharedMemSegment::named_mutex> port_lock(*port_mutex, std::adopt_lock);
 
@@ -847,7 +848,7 @@ public:
             }
 
             auto port_node = port_segment->get().find<PortNode>(
-                    ("port_node_abi" + std::to_string(CURRENT_ABI_VERSION)).c_str()).first;
+                ("port_node_abi" + std::to_string(CURRENT_ABI_VERSION)).c_str()).first;
 
             if (port_node)
             {
@@ -875,12 +876,13 @@ public:
      * goes wrong the existing port is removed from shared-memory and a new port is created.
      */
     std::shared_ptr<Port> open_port(
+            uint32_t address_id,
             uint32_t port_id,
             uint32_t max_buffer_descriptors,
             uint32_t healthy_check_timeout_ms,
             Port::OpenMode open_mode = Port::OpenMode::ReadShared)
     {
-        return open_port_internal(port_id, max_buffer_descriptors, healthy_check_timeout_ms, open_mode, nullptr);
+        return open_port_internal(address_id, port_id, max_buffer_descriptors, healthy_check_timeout_ms, open_mode, nullptr);
     }
 
     /**
@@ -894,6 +896,7 @@ public:
             SharedMemGlobal::Port::OpenMode open_mode)
     {
         return open_port_internal(
+            port->address_id(),
             port->port_id(),
             port->max_buffer_descriptors(),
             port->healthy_check_timeout_ms(),
@@ -905,9 +908,10 @@ public:
      * Remove a port from the system.
      */
     void remove_port(
+            uint32_t address_id,
             uint32_t port_id)
     {
-        auto port_segment_name = get_port_segment_name(port_id);
+        auto port_segment_name = get_port_segment_name(address_id, port_id);
         SharedMemSegment::remove(port_segment_name.c_str());
     }
 
@@ -921,12 +925,16 @@ private:
     std::string domain_name_;
 
     std::string get_port_segment_name(
+            uint32_t address_id,
             uint32_t port_id) const
     {
-        return domain_name_ + "_port" + std::to_string(port_id);
+        return address_id ?
+               domain_name_ + "_port_" + std::to_string(address_id) + "_" + std::to_string(port_id) :
+               domain_name_ + "_port" + std::to_string(port_id);
     }
 
     std::shared_ptr<Port> open_port_internal(
+            uint32_t address_id,
             uint32_t port_id,
             uint32_t max_buffer_descriptors,
             uint32_t healthy_check_timeout_ms,
@@ -936,7 +944,7 @@ private:
         std::string err_reason;
         std::shared_ptr<Port> port;
 
-        auto port_segment_name = get_port_segment_name(port_id);
+        auto port_segment_name = get_port_segment_name(address_id, port_id);
 
         logInfo(RTPS_TRANSPORT_SHM, THREADID << "Opening "
                                              << port_segment_name);
@@ -989,7 +997,7 @@ private:
 
                 if (port_node)
                 {
-                    port = std::make_shared<Port>(std::move(port_segment), port_node);
+                    port = std::make_shared<Port>(std::move(port_segment), port_node, address_id);
                 }
                 else
                 {
@@ -1090,8 +1098,7 @@ private:
                     memset(payload, 0, segment_size);
                     port_segment->get().deallocate(payload);
 
-                    port =
-                            init_port(port_id, port_segment, max_buffer_descriptors, open_mode,
+                    port = init_port(address_id, port_id, port_segment, max_buffer_descriptors, open_mode,
                                     healthy_check_timeout_ms);
                 }
                 catch (std::exception& e)
@@ -1115,6 +1122,7 @@ private:
     }
 
     std::shared_ptr<Port> init_port(
+            uint32_t address_id,
             uint32_t port_id,
             std::unique_ptr<SharedMemSegment>& segment,
             uint32_t max_buffer_descriptors,
@@ -1171,7 +1179,7 @@ private:
         port_node->buffer_node = segment->get_offset_from_address(buffer_node);
 
         port_node->is_port_ok = true;
-        port = std::make_shared<Port>(std::move(segment), port_node, std::move(lock_read_exclusive));
+        port = std::make_shared<Port>(std::move(segment), port_node, address_id, std::move(lock_read_exclusive));
 
         if (open_mode == Port::OpenMode::ReadShared)
         {
