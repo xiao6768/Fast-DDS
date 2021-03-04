@@ -15,11 +15,6 @@
 #ifndef UTILS_HOST_HPP_
 #define UTILS_HOST_HPP_
 
-#if !defined(_WIN32)
-#include <sys/types.h>
-#include <unistd.h>
-#endif  // !defined(_WIN32)
-
 #include <fastdds/rtps/common/Locator.h>
 
 #include <fastrtps/utils/md5.h>
@@ -55,11 +50,6 @@ public:
     inline uint48 mac_id() const
     {
         return mac_id_;
-    }
-
-    inline uint16_t user_id() const
-    {
-        return user_id_;
     }
 
     static Host& instance()
@@ -127,17 +117,10 @@ private:
                 mac_id_.value[i + 1] = (id_ & 0xFF);
             }
         }
-
-#if defined(_WIN32)
-        user_id_ = 0;
-#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
-        user_id_ = geteuid();
-#endif  // !defined(_WIN32)
     }
 
     uint16_t id_;
     uint48 mac_id_;
-    uint16_t user_id_;
 };
 
 } // eprosima
