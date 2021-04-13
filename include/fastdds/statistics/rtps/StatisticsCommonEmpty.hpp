@@ -60,10 +60,24 @@ protected:
 
     // TODO: methods for listeners callbacks
 
-    //! Report that a DATA message is sent
+    /*
+     * @brief Report that a ACKNACK message is sent
+     * @param current count of ACKNACKs
+     */
     inline void on_acknack(
-            int32_t )
+            int32_t count)
     {
+        (void)count;
+    }
+
+    /*
+     * @brief Report a NACKFRAG message is sent
+     * @param current count of NACKFRAGs
+     */
+    inline void on_nackfrag(
+            int32_t count)
+    {
+        (void)count;
     }
 
 };

@@ -188,8 +188,18 @@ protected:
 
     // TODO: methods for listeners callbacks
 
-    //! Report that a DATA message is sent
+    /*
+     * @brief Report that a ACKNACK message is sent
+     * @param current count of ACKNACKs
+     */
     void on_acknack(
+            int32_t count);
+
+    /*
+     * @brief Report a NACKFRAG message is sent
+     * @param current count of NACKFRAGs
+     */
+    void on_nackfrag(
             int32_t count);
 };
 
