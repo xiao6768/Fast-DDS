@@ -493,6 +493,7 @@ TEST_F(RTPSStatisticsTests, statistics_rpts_listener_callbacks)
     // reader specific callbacks
     auto reader_listener = make_shared<MockListener>();
     ASSERT_TRUE(reader_->add_statistics_listener(reader_listener));
+<<<<<<< HEAD
 
     // we must received the RTPS_SENT notifications
     EXPECT_CALL(*participant_listener, on_rtps_sent)
