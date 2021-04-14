@@ -672,11 +672,8 @@ TEST_F(RTPSStatisticsTests, statistics_rpts_listener_gap_callback)
     // match writer and reader on a dummy topic
     match_endpoints(false, "string", "statisticsSmallTopic");
 
-    // std::this_thread::sleep_for(std::chrono::seconds(10));
-
-
     // wait for reception
-    EXPECT_TRUE(reader_->wait_for_unread_cache(Duration_t(5, 0)));
+    EXPECT_TRUE(reader_->wait_for_unread_cache(Duration_t(10, 0)));
 
     // receive the second sample
     CacheChange_t* reader_change = nullptr;
