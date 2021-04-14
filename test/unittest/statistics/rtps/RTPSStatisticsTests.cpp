@@ -80,6 +80,9 @@ struct MockListener : IListener
                 break;
             default:
                 break;
+            case NACKFRAG_COUNT:
+                on_nackfrag_count(d.entity_count());
+                break;
         }
     }
 
@@ -579,6 +582,8 @@ TEST_F(RTPSStatisticsTests, statistics_rpts_listener_callbacks_fragmented)
         writer_change->serializedPayload.length = length;
         writer_change->setFragmentSize(fragment_size, true);
     }
+
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
 
     ASSERT_TRUE(writer_history_->add_change(writer_change));
 
