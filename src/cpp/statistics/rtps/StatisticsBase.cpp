@@ -184,7 +184,6 @@ bool StatisticsParticipantImpl::add_statistics_listener(
         proxy.mask(new_mask);
     }
 
-    // Check if the listener should be registered in writers
     lock.unlock();
 
     bool writers_res = true;
