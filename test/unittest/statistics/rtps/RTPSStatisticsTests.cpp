@@ -81,6 +81,9 @@ struct MockListener : IListener
             case NACKFRAG_COUNT:
                 on_nackfrag_count(data.entity_count());
                 break;
+            case GAP_COUNT:
+                on_gap_count(d.entity_count());
+                break;
             default:
                 break;
         }
@@ -673,7 +676,7 @@ TEST_F(RTPSStatisticsTests, statistics_rpts_listener_gap_callback)
     match_endpoints(false, "string", "statisticsSmallTopic");
 
     // wait for reception
-    EXPECT_TRUE(reader_->wait_for_unread_cache(Duration_t(10, 0)));
+    EXPECT_TRUE(reader_->wait_for_unread_cache(Duration_t(5, 0)));
 
     // receive the second sample
     CacheChange_t* reader_change = nullptr;
