@@ -52,6 +52,11 @@ protected:
     {
     }
 
+    //! Report a DATA_FRAG message is sent
+    inline void on_gap()
+    {
+    }
+
 };
 
 class StatisticsReaderImpl
