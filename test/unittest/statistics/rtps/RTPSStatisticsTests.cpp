@@ -75,16 +75,13 @@ struct MockListener : IListener
             case DATA_COUNT:
                 on_data_count(data.entity_count());
                 break;
+            case GAP_COUNT:
+                on_gap_count(data.entity_count());
+                break;
             case NACKFRAG_COUNT:
                 on_nackfrag_count(data.entity_count());
                 break;
-            case GAP_COUNT:
-                on_gap_count(d.entity_count());
-                break;
             default:
-                break;
-            case NACKFRAG_COUNT:
-                on_nackfrag_count(d.entity_count());
                 break;
         }
     }
