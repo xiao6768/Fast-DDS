@@ -237,6 +237,19 @@ set(${PROJECT_NAME}_source_files
     statistics/types/types.cxx
     )
 
+# Statistics support
+if (FASTDDS_STATISTICS)
+
+    set(statistics_sources
+        statistics/fastdds/domain/DomainParticipantStatisticsListener.cpp
+        )
+
+    list(APPEND ${PROJECT_NAME}_source_files
+        ${statistics_sources}
+        )
+
+endif()
+
 # SHM Transport
 if(IS_THIRDPARTY_BOOST_OK)
     list(APPEND ${PROJECT_NAME}_source_files
