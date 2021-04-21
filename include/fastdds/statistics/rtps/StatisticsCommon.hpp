@@ -196,7 +196,7 @@ protected:
             int32_t count);
 
     /*
-     * @brief Report a NACKFRAG message is sent
+     * @brief Report that a NACKFRAG message is sent
      * @param current count of NACKFRAGs
      */
     void on_nackfrag(

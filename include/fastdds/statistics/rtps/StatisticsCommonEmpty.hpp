@@ -71,7 +71,7 @@ protected:
     }
 
     /*
-     * @brief Report a NACKFRAG message is sent
+     * @brief Report that a NACKFRAG message is sent
      * @param current count of NACKFRAGs
      */
     inline void on_nackfrag(

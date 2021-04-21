@@ -75,10 +75,8 @@ struct MockListener : IListener
             case DATA_COUNT:
                 on_data_count(data.entity_count());
                 break;
-            default:
-                break;
             case NACKFRAG_COUNT:
-                on_nackfrag_count(d.entity_count());
+                on_nackfrag_count(data.entity_count());
                 break;
             default:
                 break;
@@ -98,7 +96,7 @@ class RTPSStatisticsTests
     using test_Descriptor = fastdds::rtps::test_UDPv4TransportDescriptor;
 
     // transport filter, that would delegate into a custom one if provided
-    // There are specific gee
+    // Filters have specific getters and setters methods.
     class TransportFilter
     {
         friend class RTPSStatisticsTests;
@@ -528,7 +526,8 @@ TEST_F(RTPSStatisticsTests, statistics_rpts_listener_callbacks_fragmented)
             static uint32_t max_fragment = 0;
             static bool keep_filtering = true;
 
-            uint32_t fragmentNum, old_pos = msg.pos;
+            uint32_t fragmentNum;
+            uint32_t old_pos = msg.pos;
             msg.pos += 20;
             fastrtps::rtps::CDRMessage::readUInt32(&msg, &fragmentNum);
             msg.pos = old_pos;
