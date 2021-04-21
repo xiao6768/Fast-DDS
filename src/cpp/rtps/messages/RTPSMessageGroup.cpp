@@ -79,7 +79,6 @@ void get_participant_from_endpoint(
         std::vector<GuidPrefix_t>& participants)
 {
     if (std::find(participants.begin(), participants.end(), endpoint.guidPrefix) == participants.end())
->>>>>>> 1d9afd69c... [10799] Updating the test to include the NACKFRAG_COUNT callback
     {
         participants.push_back(endpoint.guidPrefix);
     }
