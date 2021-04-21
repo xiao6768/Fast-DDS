@@ -432,7 +432,7 @@ bool RTPSMessageGroup::add_data(
     }
 #endif // if HAVE_SECURITY
 
-    // Notify the statistics module, note only writers add DATAs
+    // Notify the statistics module, note that only writers add DATAs
     assert(nullptr != dynamic_cast<RTPSWriter*>(endpoint_));
     static_cast<RTPSWriter*>(endpoint_)->on_data();
 
@@ -533,7 +533,7 @@ bool RTPSMessageGroup::add_data_frag(
     }
 #endif // if HAVE_SECURITY
 
-    // Notify the statistics module, note only writers add DATAs
+    // Notify the statistics module, note that only writers add DATAs
     assert(nullptr != dynamic_cast<RTPSWriter*>(endpoint_));
     static_cast<RTPSWriter*>(endpoint_)->on_data_frag();
 
@@ -684,7 +684,7 @@ bool RTPSMessageGroup::create_gap_submessage(
     }
 #endif // if HAVE_SECURITY
 
-    // Notify the statistics module, note only writers add gaps
+    // Notify the statistics module, note that only writers add gaps
     assert(nullptr != dynamic_cast<RTPSWriter*>(endpoint_));
     static_cast<RTPSWriter*>(endpoint_)->on_gap();
 
@@ -743,7 +743,7 @@ bool RTPSMessageGroup::add_acknack(
     }
 #endif // if HAVE_SECURITY
 
-    // Notify the statistics module, note only readers add acknacks
+    // Notify the statistics module, note that only readers add acknacks
     assert(nullptr != dynamic_cast<RTPSReader*>(endpoint_));
     static_cast<RTPSReader*>(endpoint_)->on_acknack(count);
 
